@@ -47,7 +47,8 @@ const FarmerFormPage = () => {
         navigate(`/score/${farmerId}`);
       } catch (error) {
         console.error("Error registering farmer", error);
-        alert("Failed to register farmer. Please use a unique Aadhaar number.");
+        const errorMessage = error.response?.data?.message || error.response?.data || error.message || "Unknown error";
+        alert(`Failed to register farmer: ${errorMessage}`);
       } finally {
         setLoading(false);
       }
