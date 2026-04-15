@@ -47,7 +47,19 @@ const FarmerFormPage = () => {
         navigate(`/score/${farmerId}`);
       } catch (error) {
         console.error("Error registering farmer", error);
-        const errorMessage = error.response?.data?.message || error.response?.data || error.message || "Unknown error";
+        let errorMessage = "Unknown error occurred";
+        
+        if (error.response) {
+          // Server responded with a status code
+          const data = error.response.data;
+          errorMessage = data.message || data.error || (typeof data === 'string' ? data : JSON.stringify(data));
+        } else if (error.request) {
+          // Request made but no response received (Network Error)
+          errorMessage = "Network Error: Cannot reach the backend server. Is it running?";
+        } else {
+          errorMessage = error.message;
+        }
+
         alert(`Failed to register farmer: ${errorMessage}`);
       } finally {
         setLoading(false);
